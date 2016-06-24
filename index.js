@@ -35,7 +35,7 @@ exports.atoms = {
 };
 function toBlocks(pojo) {
     var blocks = [];
-    var _loop_1 = function(selector) {
+    for (var selector in pojo) {
         if (pojo.hasOwnProperty(selector)) {
             (function process_block(styles) {
                 if (!(styles instanceof Array))
@@ -58,7 +58,7 @@ function toBlocks(pojo) {
                 styles = tmp;
                 var statements = [];
                 blocks.push([selector, statements]);
-                var _loop_2 = function(prop) {
+                for (var prop in styles) {
                     if (styles.hasOwnProperty(prop)) {
                         (function process_style(style) {
                             switch (typeof style) {
@@ -84,15 +84,9 @@ function toBlocks(pojo) {
                             var _a, _b;
                         })(styles[prop]);
                     }
-                };
-                for (var prop in styles) {
-                    _loop_2(prop);
                 }
             })(pojo[selector]);
         }
-    };
-    for (var selector in pojo) {
-        _loop_1(selector);
     }
     return blocks;
 }

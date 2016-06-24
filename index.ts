@@ -32,7 +32,7 @@ export var atoms = {
 export function toBlocks(pojo): [string, string[]][] {
     var blocks = [];
 
-    for(let selector in pojo) { if(pojo.hasOwnProperty(selector)) { (function process_block(styles) {
+    for(var selector in pojo) { if(pojo.hasOwnProperty(selector)) { (function process_block(styles) {
         if(!(styles instanceof Array)) styles = [styles];
 
         var tmp: any = {};
@@ -49,9 +49,9 @@ export function toBlocks(pojo): [string, string[]][] {
         })(s);}
         styles = tmp;
 
-        let statements = [];
+        var statements = [];
         blocks.push([selector, statements]);
-        for(let prop in styles) { if(styles.hasOwnProperty(prop)) { (function process_style(style) {
+        for(var prop in styles) { if(styles.hasOwnProperty(prop)) { (function process_style(style) {
             switch(typeof style) {
                 case 'string':
                 case 'number':
