@@ -1,0 +1,18 @@
+{
+  "name": "css-light",
+  "description": "Write CSS in JavaScript",
+  "version": "1.0.0",
+  "keywords": [
+    "css",
+    "javascript",
+    "generator",
+    "preprocessor",
+    "css-light",
+    "css-js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/streamich/css-light"
+  },
+  "main": "index.js"
+}
