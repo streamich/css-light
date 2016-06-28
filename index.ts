@@ -98,8 +98,6 @@ export function toBlocks(pojo): (Tblock|Tmediablock)[] {
 
                             var selectors_combined = selector_list.join(',');
                             var innerpojo = {[selectors_combined]: style};
-
-                            block[0] = selectors_combined;
                             blocks = blocks.concat(toBlocks(innerpojo));
                             break;
                         case 'function':

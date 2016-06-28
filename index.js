@@ -96,7 +96,6 @@ function toBlocks(pojo) {
                                     }
                                     var selectors_combined = selector_list.join(',');
                                     var innerpojo = (_c = {}, _c[selectors_combined] = style, _c);
-                                    block[0] = selectors_combined;
                                     blocks = blocks.concat(toBlocks(innerpojo));
                                     break;
                                 case 'function':
