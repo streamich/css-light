@@ -125,7 +125,7 @@ function concat(blocks) {
             }
         }
     }
-    return blockstrs.join('');
+    return blockstrs.join('\n');
 }
 
 

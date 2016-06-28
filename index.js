@@ -124,7 +124,7 @@ function concat(blocks) {
             }
         }
     }
-    return blockstrs.join('');
+    return blockstrs.join('\n');
 }
 function css(pojo) {
     var blocks = toBlocks(pojo);
