@@ -40,7 +40,6 @@ export type Tmediablock = [Tquery, Tblock[]];
 
 export function toBlocks(pojo): (Tblock|Tmediablock)[] {
     var blocks = [];
-
     for(var selector in pojo) { if(pojo.hasOwnProperty(selector)) { (function process_block(styles) {
 
         // `@media` query
@@ -53,63 +52,49 @@ export function toBlocks(pojo): (Tblock|Tmediablock)[] {
 
         if(!(styles instanceof Array)) styles = [styles];
 
-        var tmp: any = {};
-        for (var s of styles) { (function merge_styles(styles) {
-            if(styles instanceof Array) {
-                styles = merge_styles(styles);
-                return;
-            }
-            switch(typeof styles) {
-                case 'object':
-                    extend(tmp, styles);
-                    break;
-            }
-        })(s);}
-        styles = tmp;
-
-
         var statements = [];
         var block = [selector, statements];
         blocks.push(block);
-        for (var prop in styles) {
-            if (styles.hasOwnProperty(prop)) {
-                (function process_style(style) {
-                    switch (typeof style) {
-                        case 'string':
-                        case 'number':
-                            prop = atoms[prop] || prop;
-                            statements.push(prop + ':' + style);
-                            break;
-                        case 'object':
-                            var props = prop.split(',');
-                            var selector_list = [];
+        for(var st of styles) {
+            for (var prop in st) {
+                if (st.hasOwnProperty(prop)) {
+                    (function process_style(style) {
+                        switch (typeof style) {
+                            case 'string':
+                            case 'number':
+                                prop = atoms[prop] || prop;
+                                statements.push(prop + ':' + style);
+                                break;
+                            case 'object':
+                                var props = prop.split(',');
+                                var selector_list = [];
 
-                            for(var p of props) {
-                                if (p.indexOf('&') > -1) {
-                                    for(var sel of selectors) {
-                                        selector_list.push(p.replace('&', sel));
-                                    }
-                                } else {
-                                    for(var sel of selectors) {
-                                        selector_list.push(sel + ' ' + p);
+                                for(var p of props) {
+                                    if (p.indexOf('&') > -1) {
+                                        for(var sel of selectors) {
+                                            selector_list.push(p.replace('&', sel));
+                                        }
+                                    } else {
+                                        for(var sel of selectors) {
+                                            selector_list.push(sel + ' ' + p);
+                                        }
                                     }
                                 }
-                            }
 
-                            var selectors_combined = selector_list.join(',');
-                            var innerpojo = {[selectors_combined]: style};
-                            blocks = blocks.concat(toBlocks(innerpojo));
-                            break;
-                        case 'function':
-                            process_style(style(sel, styles, prop));
-                            break;
-                    }
-                })(styles[prop]);
+                                var selectors_combined = selector_list.join(',');
+                                var innerpojo = {[selectors_combined]: style};
+                                blocks = blocks.concat(toBlocks(innerpojo));
+                                break;
+                            case 'function':
+                                process_style(style(sel, styles, prop));
+                                break;
+                        }
+                    })(st[prop]);
+                }
             }
         }
 
     })(pojo[selector]);}}
-
     return blocks;
 }
 

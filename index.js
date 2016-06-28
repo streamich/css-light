@@ -48,62 +48,49 @@ function toBlocks(pojo) {
                 var selectors = selector.split(',');
                 if (!(styles instanceof Array))
                     styles = [styles];
-                var tmp = {};
-                for (var _i = 0, styles_1 = styles; _i < styles_1.length; _i++) {
-                    var s = styles_1[_i];
-                    (function merge_styles(styles) {
-                        if (styles instanceof Array) {
-                            styles = merge_styles(styles);
-                            return;
-                        }
-                        switch (typeof styles) {
-                            case 'object':
-                                extend(tmp, styles);
-                                break;
-                        }
-                    })(s);
-                }
-                styles = tmp;
                 var statements = [];
                 var block = [selector, statements];
                 blocks.push(block);
-                for (var prop in styles) {
-                    if (styles.hasOwnProperty(prop)) {
-                        (function process_style(style) {
-                            switch (typeof style) {
-                                case 'string':
-                                case 'number':
-                                    prop = exports.atoms[prop] || prop;
-                                    statements.push(prop + ':' + style);
-                                    break;
-                                case 'object':
-                                    var props = prop.split(',');
-                                    var selector_list = [];
-                                    for (var _i = 0, props_1 = props; _i < props_1.length; _i++) {
-                                        var p = props_1[_i];
-                                        if (p.indexOf('&') > -1) {
-                                            for (var _a = 0, selectors_1 = selectors; _a < selectors_1.length; _a++) {
-                                                var sel = selectors_1[_a];
-                                                selector_list.push(p.replace('&', sel));
+                for (var _i = 0, styles_1 = styles; _i < styles_1.length; _i++) {
+                    var st = styles_1[_i];
+                    for (var prop in st) {
+                        if (st.hasOwnProperty(prop)) {
+                            (function process_style(style) {
+                                switch (typeof style) {
+                                    case 'string':
+                                    case 'number':
+                                        prop = exports.atoms[prop] || prop;
+                                        statements.push(prop + ':' + style);
+                                        break;
+                                    case 'object':
+                                        var props = prop.split(',');
+                                        var selector_list = [];
+                                        for (var _i = 0, props_1 = props; _i < props_1.length; _i++) {
+                                            var p = props_1[_i];
+                                            if (p.indexOf('&') > -1) {
+                                                for (var _a = 0, selectors_1 = selectors; _a < selectors_1.length; _a++) {
+                                                    var sel = selectors_1[_a];
+                                                    selector_list.push(p.replace('&', sel));
+                                                }
+                                            }
+                                            else {
+                                                for (var _b = 0, selectors_2 = selectors; _b < selectors_2.length; _b++) {
+                                                    var sel = selectors_2[_b];
+                                                    selector_list.push(sel + ' ' + p);
+                                                }
                                             }
                                         }
-                                        else {
-                                            for (var _b = 0, selectors_2 = selectors; _b < selectors_2.length; _b++) {
-                                                var sel = selectors_2[_b];
-                                                selector_list.push(sel + ' ' + p);
-                                            }
-                                        }
-                                    }
-                                    var selectors_combined = selector_list.join(',');
-                                    var innerpojo = (_c = {}, _c[selectors_combined] = style, _c);
-                                    blocks = blocks.concat(toBlocks(innerpojo));
-                                    break;
-                                case 'function':
-                                    process_style(style(sel, styles, prop));
-                                    break;
-                            }
-                            var _c;
-                        })(styles[prop]);
+                                        var selectors_combined = selector_list.join(',');
+                                        var innerpojo = (_c = {}, _c[selectors_combined] = style, _c);
+                                        blocks = blocks.concat(toBlocks(innerpojo));
+                                        break;
+                                    case 'function':
+                                        process_style(style(sel, styles, prop));
+                                        break;
+                                }
+                                var _c;
+                            })(st[prop]);
+                        }
                     }
                 }
             })(pojo[selector]);

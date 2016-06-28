@@ -252,3 +252,20 @@ Output:
 
     section h1 span, div h1 span,section  h2 span, div  h2 span,section h1  .light, div h1  .light,section  h2  .light, div  h2  .light{text-decoration:none}
 
+// ## Overwrite
+
+Add multiple definitions of the same property: 
+
+```js
+console.log(css.css({
+    div: [
+        {boder: '1px solid red'},
+        {boder: '1px solid green'},
+    ]
+}));
+```
+
+Output:
+
+    div{boder:1px solid red;boder:1px solid green}
+    
