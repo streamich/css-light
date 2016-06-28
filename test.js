@@ -121,3 +121,12 @@ console.log(css.css({
 }));
 // div{padding:0 0 0 0;padding:0 0 0 0}
 console.log(css.atoms);
+// ## Media queries
+console.log(css.css({
+    '@media (max-width: 600px)': {
+        '.facet_sidebar': {
+            display: 'none'
+        }
+    }
+}));
+// @media (max-width: 600px){.facet_sidebar{display:none}}

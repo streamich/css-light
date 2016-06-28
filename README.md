@@ -193,21 +193,43 @@ console.log(css.atoms);
 
 Output:
     
-    { d: 'display', 
+    { d: 'display',
       mar: 'margin',
-      pad: 'padding'
-      bd: 'border', 
-      col: 'color', 
+      pad: 'padding',
+      bd: 'border',
+      col: 'color',
       op: 'opacity',
-      bg: 'backgroun
-      fz: 'font-size
-      fs: 'font-styl
-      bxz: 'box-sizi
+      bg: 'background',
+      fz: 'font-size',
+      fs: 'font-style',
+      lh: 'line-height',
+      bxz: 'box-sizing',
       cur: 'cursor',
-      ov: 'overflow'
-      pos: 'position
-      ls: 'list-styl
-      td: 'text-deco
+      ov: 'overflow',
+      pos: 'position',
+      ls: 'list-style',
+      ta: 'text-align',
+      td: 'text-decoration',
       fl: 'float',
-      w: 'width', 
-      h: 'height' } 
+      w: 'width',
+      h: 'height' }
+
+
+## Media Queries
+
+```js
+// ## Media queries
+console.log(css.css({
+    '@media (max-width: 600px)': {
+        '.facet_sidebar': {
+            display: 'none'
+        }
+    }
+}));
+```
+
+Output:
+
+    @media (max-width: 600px){
+        .facet_sidebar{display:none}
+    }

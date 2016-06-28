@@ -31,10 +31,24 @@ export var atoms = {
 };
 
 
-export function toBlocks(pojo): [string, string[]][] {
+export type Tselector = string;
+export type Tstyles = string[];
+export type Tblock = [Tselector, Tstyles];
+export type Tquery = string;
+export type Tmediablock = [Tquery, Tblock[]];
+
+
+export function toBlocks(pojo): (Tblock|Tmediablock)[] {
     var blocks = [];
 
     for(var selector in pojo) { if(pojo.hasOwnProperty(selector)) { (function process_block(styles) {
+
+        // `@media` query
+        if(selector[0] === '@') {
+            blocks.push([selector, toBlocks(styles)]);
+            return;
+        }
+
         if(!(styles instanceof Array)) styles = [styles];
 
         var tmp: any = {};
@@ -80,15 +94,24 @@ export function toBlocks(pojo): [string, string[]][] {
 }
 
 
-export function css(pojo): string {
-    var blocks = toBlocks(pojo);
-
+function concat(blocks) {
     var blockstrs = [];
     for(var i = 0; i < blocks.length; i++) {
-        if(blocks[i][1].length)
-            blockstrs.push(blocks[i][0] + '{' + blocks[i][1].join(';') + '}');
+        if(blocks[i][1].length) {
+            if(typeof blocks[i][1][0] === 'string') { // `Tblock`
+                blockstrs.push(blocks[i][0] + '{' + blocks[i][1].join(';') + '}');
+            } else { // `Tmediablock`
+                blockstrs.push(blocks[i][0] + '{' + concat(blocks[i][1]) + '}');
+            }
+        }
     }
-    return blockstrs.join('\n');
+    return blockstrs.join('');
+}
+
+
+export function css(pojo): string {
+    var blocks = toBlocks(pojo);
+    return concat(blocks);
 }
 
 // Inject CSS into DOM

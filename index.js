@@ -40,6 +40,11 @@ function toBlocks(pojo) {
     for (var selector in pojo) {
         if (pojo.hasOwnProperty(selector)) {
             (function process_block(styles) {
+                // `@media` query
+                if (selector[0] === '@') {
+                    blocks.push([selector, toBlocks(styles)]);
+                    return;
+                }
                 if (!(styles instanceof Array))
                     styles = [styles];
                 var tmp = {};
@@ -93,14 +98,23 @@ function toBlocks(pojo) {
     return blocks;
 }
 exports.toBlocks = toBlocks;
-function css(pojo) {
-    var blocks = toBlocks(pojo);
+function concat(blocks) {
     var blockstrs = [];
     for (var i = 0; i < blocks.length; i++) {
-        if (blocks[i][1].length)
-            blockstrs.push(blocks[i][0] + '{' + blocks[i][1].join(';') + '}');
+        if (blocks[i][1].length) {
+            if (typeof blocks[i][1][0] === 'string') {
+                blockstrs.push(blocks[i][0] + '{' + blocks[i][1].join(';') + '}');
+            }
+            else {
+                blockstrs.push(blocks[i][0] + '{' + concat(blocks[i][1]) + '}');
+            }
+        }
     }
-    return blockstrs.join('\n');
+    return blockstrs.join('');
+}
+function css(pojo) {
+    var blocks = toBlocks(pojo);
+    return concat(blocks);
 }
 exports.css = css;
 // Inject CSS into DOM
