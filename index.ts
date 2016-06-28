@@ -49,6 +49,8 @@ export function toBlocks(pojo): (Tblock|Tmediablock)[] {
             return;
         }
 
+        var selectors = selector.split(',');
+
         if(!(styles instanceof Array)) styles = [styles];
 
         var tmp: any = {};
@@ -65,29 +67,49 @@ export function toBlocks(pojo): (Tblock|Tmediablock)[] {
         })(s);}
         styles = tmp;
 
+
         var statements = [];
-        blocks.push([selector, statements]);
-        for(var prop in styles) { if(styles.hasOwnProperty(prop)) { (function process_style(style) {
-            switch(typeof style) {
-                case 'string':
-                case 'number':
-                    prop = atoms[prop] || prop;
-                    statements.push(prop + ':' + style);
-                    break;
-                case 'object':
-                    var innerpojo: any;
-                    if(prop.indexOf('&') > -1) {
-                        innerpojo = {[prop.replace('&', selector)]: style};
-                    } else {
-                        innerpojo = {[selector + ' ' + prop]: style};
+        var block = [selector, statements];
+        blocks.push(block);
+        for (var prop in styles) {
+            if (styles.hasOwnProperty(prop)) {
+                (function process_style(style) {
+                    switch (typeof style) {
+                        case 'string':
+                        case 'number':
+                            prop = atoms[prop] || prop;
+                            statements.push(prop + ':' + style);
+                            break;
+                        case 'object':
+                            var props = prop.split(',');
+                            var selector_list = [];
+
+                            for(var p of props) {
+                                if (p.indexOf('&') > -1) {
+                                    for(var sel of selectors) {
+                                        selector_list.push(p.replace('&', sel));
+                                    }
+                                } else {
+                                    for(var sel of selectors) {
+                                        selector_list.push(sel + ' ' + p);
+                                    }
+                                }
+                            }
+
+                            var selectors_combined = selector_list.join(',');
+                            var innerpojo = {[selectors_combined]: style};
+
+                            block[0] = selectors_combined;
+                            blocks = blocks.concat(toBlocks(innerpojo));
+                            break;
+                        case 'function':
+                            process_style(style(sel, styles, prop));
+                            break;
                     }
-                    blocks = blocks.concat(toBlocks(innerpojo));
-                    break;
-                case 'function':
-                    process_style(style(selector, styles, prop));
-                    break;
+                })(styles[prop]);
             }
-        })(styles[prop]);}}
+        }
+
     })(pojo[selector]);}}
 
     return blocks;

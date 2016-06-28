@@ -45,6 +45,7 @@ function toBlocks(pojo) {
                     blocks.push([selector, toBlocks(styles)]);
                     return;
                 }
+                var selectors = selector.split(',');
                 if (!(styles instanceof Array))
                     styles = [styles];
                 var tmp = {};
@@ -64,7 +65,8 @@ function toBlocks(pojo) {
                 }
                 styles = tmp;
                 var statements = [];
-                blocks.push([selector, statements]);
+                var block = [selector, statements];
+                blocks.push(block);
                 for (var prop in styles) {
                     if (styles.hasOwnProperty(prop)) {
                         (function process_style(style) {
@@ -75,20 +77,33 @@ function toBlocks(pojo) {
                                     statements.push(prop + ':' + style);
                                     break;
                                 case 'object':
-                                    var innerpojo;
-                                    if (prop.indexOf('&') > -1) {
-                                        innerpojo = (_a = {}, _a[prop.replace('&', selector)] = style, _a);
+                                    var props = prop.split(',');
+                                    var selector_list = [];
+                                    for (var _i = 0, props_1 = props; _i < props_1.length; _i++) {
+                                        var p = props_1[_i];
+                                        if (p.indexOf('&') > -1) {
+                                            for (var _a = 0, selectors_1 = selectors; _a < selectors_1.length; _a++) {
+                                                var sel = selectors_1[_a];
+                                                selector_list.push(p.replace('&', sel));
+                                            }
+                                        }
+                                        else {
+                                            for (var _b = 0, selectors_2 = selectors; _b < selectors_2.length; _b++) {
+                                                var sel = selectors_2[_b];
+                                                selector_list.push(sel + ' ' + p);
+                                            }
+                                        }
                                     }
-                                    else {
-                                        innerpojo = (_b = {}, _b[selector + ' ' + prop] = style, _b);
-                                    }
+                                    var selectors_combined = selector_list.join(',');
+                                    var innerpojo = (_c = {}, _c[selectors_combined] = style, _c);
+                                    block[0] = selectors_combined;
                                     blocks = blocks.concat(toBlocks(innerpojo));
                                     break;
                                 case 'function':
-                                    process_style(style(selector, styles, prop));
+                                    process_style(style(sel, styles, prop));
                                     break;
                             }
-                            var _a, _b;
+                            var _c;
                         })(styles[prop]);
                     }
                 }

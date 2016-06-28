@@ -130,3 +130,14 @@ console.log(css.css({
     }
 }));
 // @media (max-width: 600px){.facet_sidebar{display:none}}
+// ## Nested lists
+console.log(css.css({
+    'section, div': {
+        'h1, h2': {
+            'span, .light': {
+                td: 'none'
+            }
+        }
+    }
+}));
+// section h1 span, div h1 span,section  h2 span, div  h2 span,section h1  .light, div h1  .light,section  h2  .light, div  h2  .light{text-decoration:none}
