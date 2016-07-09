@@ -18,13 +18,23 @@ exports.atoms = {
     mar: 'margin',
     pad: 'padding',
     bd: 'border',
+    bdt: 'border-top',
+    bdr: 'border-right',
+    bdb: 'border-bottom',
+    bdl: 'border-left',
+    bdrad: 'border-radius',
     col: 'color',
     op: 'opacity',
     bg: 'background',
+    bgc: 'background-color',
     fz: 'font-size',
     fs: 'font-style',
+    fw: 'font-weight',
+    ff: 'font-family',
     lh: 'line-height',
     bxz: 'box-sizing',
+    w_bxz: '-webkit-box-sizing',
+    m_bxz: '-moz-box-sizing',
     cur: 'cursor',
     ov: 'overflow',
     pos: 'position',
@@ -33,7 +43,9 @@ exports.atoms = {
     td: 'text-decoration',
     fl: 'float',
     w: 'width',
-    h: 'height'
+    h: 'height',
+    trs: 'transition',
+    out: 'outline'
 };
 function toBlocks(pojo) {
     var blocks = [];
