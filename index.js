@@ -45,7 +45,8 @@ exports.atoms = {
     w: 'width',
     h: 'height',
     trs: 'transition',
-    out: 'outline'
+    out: 'outline',
+    vis: 'visibility'
 };
 function toBlocks(pojo) {
     var blocks = [];
@@ -123,7 +124,7 @@ function concat(blocks) {
             }
         }
     }
-    return blockstrs.join('\n');
+    return blockstrs.join('');
 }
 function css(pojo) {
     var blocks = toBlocks(pojo);

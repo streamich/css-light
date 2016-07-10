@@ -40,6 +40,7 @@ export var atoms = {
     h:      'height',
     trs:    'transition',
     out:    'outline',
+    vis:    'visibility',
 };
 
 
@@ -122,7 +123,7 @@ function concat(blocks) {
             }
         }
     }
-    return blockstrs.join('\n');
+    return blockstrs.join('');
 }
 
 
