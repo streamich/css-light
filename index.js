@@ -16,7 +16,15 @@ exports.extend = extend;
 exports.atoms = {
     d: 'display',
     mar: 'margin',
+    mart: 'margin-top',
+    marr: 'margin-right',
+    marb: 'margin-bottom',
+    marl: 'margin-left',
     pad: 'padding',
+    padt: 'padding-top',
+    padr: 'padding-right',
+    padb: 'padding-bottom',
+    padl: 'padding-left',
     bd: 'border',
     bdt: 'border-top',
     bdr: 'border-right',
@@ -46,7 +54,9 @@ exports.atoms = {
     h: 'height',
     trs: 'transition',
     out: 'outline',
-    vis: 'visibility'
+    vis: 'visibility',
+    ww: 'word-wrap',
+    con: 'content'
 };
 function toBlocks(pojo) {
     var blocks = [];
